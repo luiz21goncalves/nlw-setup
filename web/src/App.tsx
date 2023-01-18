@@ -1,9 +1,16 @@
 import './styles/global.css'
 
+import { Header } from './components/Header'
+import { SummaryTable } from './components/SummatyTable'
+
 export function App() {
   return (
-    <div className="bg-zinc-900  w-full h-[100vh]">
-      <h1 className="text-white text-center">NLW Setup</h1>
+    <div className="w-screen h-screen flex justify-center items-center">
+      <div className="w-full max-w-5xl px-6 flex flex-col gap-16">
+        <Header />
+
+        <SummaryTable />
+      </div>
     </div>
   )
 }

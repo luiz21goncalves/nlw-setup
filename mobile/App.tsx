@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+import './src/lib/dayjs'
+
 import {
   Inter_400Regular,
   Inter_600SemiBold,
@@ -6,9 +8,10 @@ import {
   Inter_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/inter'
-import { StatusBar, StyleSheet, Text, View } from 'react-native'
+import { StatusBar } from 'react-native'
 
 import { Loading } from './src/components/Loading'
+import { Home } from './src/screens/Home'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -23,32 +26,14 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        Open up App.tsx to start working on your app!
-      </Text>
+    <>
+      <Home />
 
       <StatusBar
         barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
-    </View>
+    </>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#09090a',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 32,
-  },
-  text: {
-    color: '#fff',
-    fontFamily: 'Inter_800ExtraBold',
-    fontSize: 32,
-    textAlign: 'center',
-  },
-})
