@@ -122,7 +122,7 @@ export async function appRoutes (app: FastifyInstance): Promise<void> {
   })
 
   app.get('/summary', async () => {
-    const summaryRaw = await prisma.$queryRaw`
+    const summary = await prisma.$queryRaw`
       SELECT
         D.id,
         D.date,
@@ -145,6 +145,6 @@ export async function appRoutes (app: FastifyInstance): Promise<void> {
       FROM days D
     `
 
-    return { summaryRaw }
+    return { summary }
   })
 }

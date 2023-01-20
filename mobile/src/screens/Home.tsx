@@ -1,9 +1,12 @@
 import { useNavigation } from '@react-navigation/native'
+import dayjs from 'dayjs'
 import { useId } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
 
 import { DAY_SIZE, HabitDay } from '../components/HabitDay'
 import { Header } from '../components/Header'
+import { Loading } from '../components/Loading'
+import { useSummaryQuery } from '../queries/useSummaryQuery'
 import { generateDateFromYearBeginning } from '../utils/generate-dates-from-year-beginning'
 
 const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S']
@@ -17,9 +20,21 @@ export function Home() {
 
   const navigation = useNavigation()
 
+  const { data: summary, error, isError, isLoading } = useSummaryQuery()
+
   function handleNavigateToHabit(date: string) {
     navigation.navigate('habit', { date })
   }
+
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (isError) {
+    Alert.alert('Ops', 'Não foi possível carregar o sumário de hábitos.')
+    console.error(JSON.stringify(error))
+  }
+
   return (
     <View className="flex-1 bg-background px-8 pt-16">
       <Header />
@@ -44,11 +59,23 @@ export function Home() {
       >
         <View className="flex-row flex-wrap">
           {summaryDates.map((date) => {
+            const dayInSummary = summary?.find((day) => {
+              return dayjs(date).isSame(day.date, 'day')
+            })
+
             function onPress() {
               handleNavigateToHabit(date.toISOString())
             }
 
-            return <HabitDay key={date.toISOString()} onPress={onPress} />
+            return (
+              <HabitDay
+                key={date.toISOString()}
+                onPress={onPress}
+                amount={dayInSummary?.amount}
+                completed={dayInSummary?.completed}
+                date={date}
+              />
+            )
           })}
 
           {amountOfDaysToFill > 0 &&

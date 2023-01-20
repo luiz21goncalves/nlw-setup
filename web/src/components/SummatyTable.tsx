@@ -1,5 +1,7 @@
+import dayjs from 'dayjs'
 import { useId } from 'react'
 
+import { useSummaryQuery } from '../queries/useSummaryQuery'
 import { generateDateFromYearBeginning } from '../utils/generate-dates-from-year-beginning'
 import { HabitDay } from './HabitDay'
 
@@ -12,6 +14,8 @@ const amountOfDayToFill = MINIMUM_SUMMARY_DATES_SIZE - summaryDates.length
 
 export function SummaryTable() {
   const id = useId()
+
+  const { data: summary } = useSummaryQuery()
 
   return (
     <div className="w-full flex">
@@ -30,13 +34,16 @@ export function SummaryTable() {
 
       <div className="grid grid-rows-7 grid-flow-col gap-3">
         {summaryDates.map((date) => {
-          const completed = Math.round(Math.random() * 5)
+          const dayInSummary = summary?.find((day) => {
+            return dayjs(date).isSame(day.date, 'day')
+          })
 
           return (
             <HabitDay
               key={date.toISOString()}
-              amount={5}
-              completed={completed}
+              date={date}
+              amount={dayInSummary?.amount}
+              completed={dayInSummary?.completed}
             />
           )
         })}
