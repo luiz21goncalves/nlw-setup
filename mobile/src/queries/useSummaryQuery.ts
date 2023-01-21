@@ -9,7 +9,7 @@ type Day = {
   amount: number
 }
 
-type Summary = Day[]
+export type Summary = Day[]
 
 const getSummary = async () => {
   const response = await api.get<{ summary: Summary }>('/summary')

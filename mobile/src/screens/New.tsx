@@ -13,7 +13,7 @@ import colors from 'tailwindcss/colors'
 
 import { BackButton } from '../components/BackButton'
 import { Checkbox } from '../components/Checkbox'
-import { api } from '../lib/axios'
+import { useCreateHabitMutation } from '../queries/useCreateHabitMutation'
 
 const availableWeekDays = [
   'Domingo',
@@ -29,6 +29,8 @@ export function New() {
   const [weekDays, setWeekDays] = useState<number[]>([])
   const [title, setTitle] = useState('')
 
+  const { mutateAsync } = useCreateHabitMutation()
+
   function handleToggleWeekDay(weekDayIndex: number) {
     if (weekDays.includes(weekDayIndex)) {
       setWeekDays((prevState) =>
@@ -42,19 +44,18 @@ export function New() {
   async function handleCreateNewHabit() {
     try {
       if (!title.trim() || weekDays.length === 0) {
-        Alert.alert(
+        return Alert.alert(
           'Novo Hábito',
           'Informe o nome do hábito e escolha a periodicidade.',
         )
-        return
       }
 
-      await api.post('/habits', { title, weekDays })
+      await mutateAsync({ title, weekDays })
 
       setTitle('')
       setWeekDays([])
 
-      Alert.alert('Novo Hábito', 'Hábito criado com sucesso!')
+      return Alert.alert('Novo Hábito', 'Hábito criado com sucesso!')
     } catch (error) {
       console.error(error)
       Alert.alert('Ops', 'Não foi possível criar o novo hábito.')
